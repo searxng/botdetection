@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# export LANG=C
+PRJ_ROOT="$(dirname "${BASH_SOURCE[0]}")"
+
+# shellcheck source=scripts/main.sh
+source "${PRJ_ROOT}/scripts/main.sh"
+# shellcheck source=scripts/lib_py.sh
+scripts.import py
+# shellcheck source=scripts/lib_doc-sphinx.sh
+scripts.import doc-sphinx
+
+help() {
+    cat <<EOF
+env.build   : build project's developer environment
+cmd         : run command in project's environment
+clean       : clean up project folder
+test        : run development tests
+build       : build dist packages
+EOF
+    doc.help
+}
+
+[ "${V}" = "1" ] && set -x
+
+env.build() {
+    py.env.build
+    # https://setuptools.pypa.io/en/latest/userguide/development_mode.html
+    "${PY_VENV}/bin/pip" install -e ".[dev,test]"
+
+    env.build.post
+}
+
+
+env.build.post() {
+    env.source
+    # _BOTDETECTION_COMPLETE=bash_source pysandbox > "${PY_VENV}/bin/.botdetection-complete.bash"
+    # _BOTDETECTION_COMPLETE=zsh_source pysandbox  > "${PY_VENV}/bin/.botdetection-complete.zsh"
+    # _BOTDETECTION_COMPLETE=fish_source pysandbox > "${PY_VENV}/bin/.botdetection-complete.fish"
+}
+
+
+env.source() {
+    py.env.activate
+}
+
+
+cmd() {
+    (   set -e
+	env.source
+        "$@"
+    )
+    dump_return $?
+}
+
+
+clean() {
+    (   set -e
+	msg.build CLEAN "clean up project folder"
+	py.clean
+    )
+}
+
+
+test() {
+    (   set -e
+	msg.build TEST "shellcheck ./prj"
+	shellcheck -x -s bash ./prj
+	msg.build TEST "pylint ./src"
+	cmd pylint ./src
+    )
+    dump_return $?
+}
+
+
+build() {
+    msg.build BUILD "python packages"
+    cmd python -m build
+}
+
+
+main "$@"

@@ -1,0 +1,87 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+[project]
+
+dynamic = ["version"]  # see [tool.setuptools.dynamic]
+
+name = "botdetection"
+description = "Methods for the detection of bots in Flask applications "
+readme = "README.rst"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["botdetection", "flask", "SearXNG"]
+authors = [
+  {name = "Markus Heiser", email = "markus.heiser@darmarit.de" }
+]
+maintainers = [
+  {name = "Markus Heiser", email = "markus.heiser@darmarit.de" }
+]
+
+classifiers = [
+  # For a list of valid classifiers, see https://pypi.org/classifiers/
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Programming Language :: Python",
+]
+
+dependencies = [
+  "flask",
+  "pytomlpp",
+  "redis",
+  "typing_extensions",
+  # "click",
+  # "pydnsbl",
+  # "netaddr",
+]
+
+[project.optional-dependencies]
+# pip install -e .[dev,test]
+dev = [
+  "build",
+  "Sphinx",
+  "sphinx-issues",
+  "sphinx-tabs",
+  "sphinx-autobuild",
+  "sphinx-notfound-page",
+  "sphinxcontrib-programoutput",
+  "Pallets-Sphinx-Themes",
+  "linuxdoc",
+  "twine",
+  "click",
+]
+test = [
+  "pylint",
+]
+
+[project.urls]
+homepage = "https://github.com/searxng/botdetection"
+repository = "https://github.com/searxng/botdetection/"
+issues = "https://github.com/searxng/botdetection/issues"
+changelog = "https://github.com/searxng/botdetection/blob/master/CHANGELOG"
+documentation = "https://searxng.org/botdetection/"
+"#searxng:matrix.org" = "https://matrix.to/#/#searxng:matrix.org"
+
+[project.scripts]
+# botdetection = "botdetection .cli:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+[tool.setuptools.package-data]
+# https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+botdetection = ["*.toml"]
+
+[tool.setuptools.dynamic]
+version = {attr = "botdetection.__pkginfo__.VERSION"}
+
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pylint.format]
+# Maximum number of characters on a single line.
+max-line-length = 120
