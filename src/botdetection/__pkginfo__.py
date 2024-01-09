@@ -3,7 +3,7 @@
 
 """
 
-VERSION = '20231023.0'
+VERSION = '20240109.0'
 GIT_URL = 'https://github.com/searxng/botdetection'
 GIT_BRANCH = 'master'
 ISSUE_URL = GIT_URL + '/issues'
