@@ -1,3 +1,7 @@
+2024-02-26 [20240226.0] synced with modifications from upstream code
+
+	* SearXNG PR-3116: https://github.com/searxng/searxng/pull/3116
+
 2024-01-09 [20240109.0] inital
 
 	* inital: botdetection code from https://github.com/searxng/searxng
