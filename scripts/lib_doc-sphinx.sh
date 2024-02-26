@@ -80,7 +80,7 @@ doc.gh-pages() {
 
     [ "${V}" = "1" ] && set -x
     head="$(git rev-parse HEAD)"
-    branch="$(git name-rev --name-only HEAD)"
+    branch="$(git branch --show-current)"
     remote="$(git config branch."${branch}".remote)"
     remote_url="$(git config remote."${remote}".url)"
 
