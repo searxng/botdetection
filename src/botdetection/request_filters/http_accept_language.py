@@ -13,23 +13,20 @@ if the Accept-Language_ header is unset.
 """
 # pylint: disable=unused-argument
 from __future__ import annotations
-from ipaddress import (
-    IPv4Network,
-    IPv6Network,
-)
 
 import flask
 import werkzeug
 
-from . import config
-from ._helpers import too_many_requests
+from .._helpers import too_many_requests
+from .._request_info import RequestInfo
+from .._request_context import RequestContext
 
 
 def filter_request(
-    network: IPv4Network | IPv6Network,
+    context: RequestContext,
+    request_info: RequestInfo,
     request: flask.Request,
-    cfg: config.Config,
 ) -> werkzeug.Response | None:
-    if request.headers.get('Accept-Language', '').strip() == '':
-        return too_many_requests(network, "missing HTTP header Accept-Language")
+    if request.headers.get("Accept-Language", "").strip() == "":
+        return too_many_requests(request_info, "missing HTTP header Accept-Language")
     return None

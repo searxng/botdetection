@@ -36,45 +36,42 @@ Implementations
 from __future__ import annotations
 from typing import Tuple
 from ipaddress import (
-    ip_network,
     IPv4Address,
     IPv6Address,
+    IPv4Network,
+    IPv6Network,
 )
 
-from . import config
+from botdetection.config import Config
 from ._helpers import logger
 
-logger = logger.getChild('ip_limit')
+logger = logger.getChild("ip_limit")
 
 
-def pass_ip(real_ip: IPv4Address | IPv6Address, cfg: config.Config) -> Tuple[bool, str]:
+def pass_ip(real_ip: IPv4Address | IPv6Address, cfg: Config) -> Tuple[bool, str]:
     """Checks if the IP on the subnet is in one of the members of the
     ``botdetection.ip_lists.pass_ip`` list.
     """
-    return ip_is_subnet_of_member_in_list(real_ip, 'botdetection.ip_lists.pass_ip', cfg)
+    return _ip_is_subnet_of_member_in_list(real_ip, cfg.botdetection.ip_lists.pass_ip, "pass_ip")
 
 
-def block_ip(real_ip: IPv4Address | IPv6Address, cfg: config.Config) -> Tuple[bool, str]:
+def block_ip(real_ip: IPv4Address | IPv6Address, cfg: Config) -> Tuple[bool, str]:
     """Checks if the IP on the subnet is in one of the members of the
     ``botdetection.ip_lists.block_ip`` list.
     """
 
-    block, msg = ip_is_subnet_of_member_in_list(real_ip, 'botdetection.ip_lists.block_ip', cfg)
+    block, msg = _ip_is_subnet_of_member_in_list(real_ip, cfg.botdetection.ip_lists.block_ip, "block_ip")
     if block:
         msg += " To remove IP from list, please contact the maintainer of the service."
     return block, msg
 
 
-def ip_is_subnet_of_member_in_list(
-    real_ip: IPv4Address | IPv6Address, list_name: str, cfg: config.Config
-) -> Tuple[bool, str]:
-
-    for net in cfg.get(list_name, default=[]):
-        try:
-            net = ip_network(net, strict=False)
-        except ValueError:
-            logger.error("invalid IP %s in %s", net, list_name)
-            continue
+def _ip_is_subnet_of_member_in_list(
+        real_ip: IPv4Address | IPv6Address,
+        network_list: list[IPv4Network | IPv6Network],
+        list_name: str
+    ) -> Tuple[bool, str]:
+    for net in network_list:
         if real_ip.version == net.version and real_ip in net:
             return True, f"IP matches {net.compressed} in {list_name}."
     return False, f"IP is not a member of an item in the f{list_name} list"

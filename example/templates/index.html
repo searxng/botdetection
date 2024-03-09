@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        <!-- botdetection_html_header is provided by the middleware -->
+        {%- if botdetection_html_header is defined -%}
+        {{ botdetection_html_header() | safe }}
+        {%- endif -%}
+    </head>
+    <body>
+        <h1>Demo of the botdetection</h1>
+        <p>Client IP address: {{ ip }}</p>
+        <p>BotDection: {% if botdetection_enabled %}enable{% else %}disable{% endif %}</p>
+        <p>Link Token: {% if link_token %}enable{% else %}disable{% endif %}</p>
+    </body>
+</html>
