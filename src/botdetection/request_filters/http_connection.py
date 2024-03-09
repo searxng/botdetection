@@ -14,24 +14,20 @@ the Connection_ header is set to ``close``.
 # pylint: disable=unused-argument
 
 from __future__ import annotations
-from ipaddress import (
-    IPv4Network,
-    IPv6Network,
-)
 
 import flask
 import werkzeug
 
-from . import config
-from ._helpers import too_many_requests
+from .._helpers import too_many_requests
+from .._request_info import RequestInfo
+from .._request_context import RequestContext
 
 
 def filter_request(
-    network: IPv4Network | IPv6Network,
+    context: RequestContext,
+    request_info: RequestInfo,
     request: flask.Request,
-    cfg: config.Config,
 ) -> werkzeug.Response | None:
-
-    if request.headers.get('Connection', '').strip() == 'close':
-        return too_many_requests(network, "HTTP header 'Connection=close")
+    if request.headers.get("Connection", "").strip() == "close":
+        return too_many_requests(request_info, "HTTP header 'Connection=close")
     return None

@@ -10,10 +10,12 @@ requires-python = ">=3.8"
 license = {file = "LICENSE"}
 keywords = ["botdetection", "flask", "SearXNG"]
 authors = [
-  {name = "Markus Heiser", email = "markus.heiser@darmarit.de" }
+  {name = "Markus Heiser", email = "markus.heiser@darmarit.de" },
+  {name = "Alexandre Flament", email = "alex.andre@al-f.net" }
 ]
 maintainers = [
-  {name = "Markus Heiser", email = "markus.heiser@darmarit.de" }
+  {name = "Markus Heiser", email = "markus.heiser@darmarit.de" },
+  {name = "Alexandre Flament", email = "alex.andre@al-f.net" }
 ]
 
 classifiers = [
@@ -27,9 +29,8 @@ classifiers = [
 
 dependencies = [
   "flask",
-  "pytomlpp",
   "redis",
-  "typing_extensions",
+  "pydantic>=2.6.3",
   # "click",
   # "pydnsbl",
   # "netaddr",
